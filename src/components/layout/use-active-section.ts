@@ -1,5 +1,6 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export function pickActiveSection(intersecting: ReadonlySet<string>, order: readonly string[]): string | null {
@@ -10,8 +11,13 @@ export function pickActiveSection(intersecting: ReadonlySet<string>, order: read
   return active;
 }
 
-/** Tracks which section crosses a thin band near the top of the viewport. */
+/**
+ * Tracks which section crosses a thin band near the top of the viewport.
+ * The nav lives in the root layout and survives client-side navigation, so the effect re-runs
+ * on every pathname change to re-query the (new) section elements and drop a stale highlight.
+ */
 export function useActiveSection(ids: readonly string[]): string | null {
+  const pathname = usePathname();
   const [active, setActive] = useState<string | null>(null);
 
   useEffect(() => {
@@ -30,8 +36,11 @@ export function useActiveSection(ids: readonly string[]): string | null {
       const el = document.getElementById(id);
       if (el) observer.observe(el);
     }
-    return () => observer.disconnect();
-  }, [ids]);
+    return () => {
+      observer.disconnect();
+      setActive(null);
+    };
+  }, [ids, pathname]);
 
   return active;
 }

@@ -100,7 +100,7 @@ export function Nav() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className="border-t border-line bg-bg/95 backdrop-blur-xl lg:hidden"
+            className="max-h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain border-t border-line bg-bg/95 backdrop-blur-xl lg:hidden"
           >
             <nav aria-label="Mobile" className="mx-auto flex max-w-[1200px] flex-col gap-1 px-4 py-4 sm:px-6">
               {navLinks.map((link) => (
