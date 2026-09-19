@@ -194,7 +194,7 @@ export function ExtractionPipeline() {
           className="inline-flex min-h-11 items-center gap-2 rounded-lg px-3 text-xs text-muted transition-colors hover:text-fg"
         >
           {paused ? <Play className="size-3.5" aria-hidden /> : <Pause className="size-3.5" aria-hidden />}
-          {paused ? "Play animation" : "Pause animation"}
+          Pause animation
         </button>
       </div>
     </div>

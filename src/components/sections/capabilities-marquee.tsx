@@ -46,7 +46,7 @@ export function CapabilitiesMarquee() {
           type="button"
           onClick={() => setPaused((p) => !p)}
           aria-pressed={paused}
-          aria-label={paused ? "Play capabilities scroll" : "Pause capabilities scroll"}
+          aria-label="Pause capabilities scroll"
           className="grid size-11 shrink-0 place-items-center rounded-full border border-line bg-surface text-muted transition-colors hover:text-fg motion-reduce:hidden"
         >
           {paused ? <Play className="size-4" aria-hidden /> : <Pause className="size-4" aria-hidden />}
