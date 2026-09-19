@@ -185,19 +185,18 @@ export function ExtractionPipeline() {
         </div>
       </div>
 
-      {reduced ? null : (
-        <div className="mt-2 flex justify-end">
-          <button
-            type="button"
-            onClick={() => setPaused((p) => !p)}
-            aria-pressed={paused}
-            className="inline-flex min-h-11 items-center gap-2 rounded-lg px-3 text-xs text-muted transition-colors hover:text-fg"
-          >
-            {paused ? <Play className="size-3.5" aria-hidden /> : <Pause className="size-3.5" aria-hidden />}
-            {paused ? "Play animation" : "Pause animation"}
-          </button>
-        </div>
-      )}
+      {/* Always rendered so server and client markup match; the media query hides it (and drops it from the a11y tree) under reduced motion. */}
+      <div className="mt-2 flex justify-end motion-reduce:hidden">
+        <button
+          type="button"
+          onClick={() => setPaused((p) => !p)}
+          aria-pressed={paused}
+          className="inline-flex min-h-11 items-center gap-2 rounded-lg px-3 text-xs text-muted transition-colors hover:text-fg"
+        >
+          {paused ? <Play className="size-3.5" aria-hidden /> : <Pause className="size-3.5" aria-hidden />}
+          {paused ? "Play animation" : "Pause animation"}
+        </button>
+      </div>
     </div>
   );
 }
