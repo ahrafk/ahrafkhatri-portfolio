@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { GeistSans } from "geist/font/sans";
 import { JetBrains_Mono } from "next/font/google";
 import type { ReactNode } from "react";
+import { Footer } from "@/components/layout/footer";
+import { Nav } from "@/components/layout/nav";
 import { MotionProvider } from "@/components/providers/motion-provider";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { site, SITE_URL } from "@/content/site";
@@ -53,7 +55,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         </a>
         <ThemeProvider>
           <MotionProvider>
+            <Nav />
             <main id="main">{children}</main>
+            <Footer />
           </MotionProvider>
         </ThemeProvider>
       </body>
