@@ -117,3 +117,17 @@
     display: none;
   }
 }
+
+/* Tech chips: monochrome by default, brand color (mixed toward the foreground so dark brands stay legible) on hover. */
+.tech-chip {
+  transition: border-color 200ms ease;
+}
+.tech-chip .tech-icon {
+  transition: color 200ms ease;
+}
+.tech-chip:hover {
+  border-color: color-mix(in oklab, var(--brand, var(--accent)) 50%, var(--border));
+}
+.tech-chip:hover .tech-icon {
+  color: color-mix(in oklab, var(--brand, var(--accent)) 65%, var(--fg));
+}

@@ -69,3 +69,5 @@ export const stackGroups: StackGroup[] = [
     ],
   },
 ];
+
+export const stackFootnote = "…and more, chosen to fit each project.";
