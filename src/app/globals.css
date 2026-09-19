@@ -13,6 +13,7 @@
   --accent: #2563eb;
   --accent-fg: #ffffff;
   --ok: #15803d;
+  --danger: #b91c1c;
   --glow: 37 99 235;
 }
 
@@ -27,6 +28,7 @@
   --accent: #4c9aff;
   --accent-fg: #06101f;
   --ok: #4ade80;
+  --danger: #f87171;
   --glow: 76 154 255;
 }
 
@@ -40,6 +42,7 @@
   --color-accent: var(--accent);
   --color-accent-fg: var(--accent-fg);
   --color-ok: var(--ok);
+  --color-danger: var(--danger);
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
 }

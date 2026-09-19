@@ -22,6 +22,8 @@ const pairs: [string, string][] = [
   ["accent-fg", "accent"],
   ["ok", "bg"],
   ["ok", "surface"],
+  ["danger", "bg"],
+  ["danger", "surface"],
 ];
 
 describe.each([
@@ -31,7 +33,7 @@ describe.each([
   const t = tokens(selector);
 
   it("defines every token the components rely on", () => {
-    for (const key of ["bg", "surface", "surface-2", "border", "fg", "muted", "accent", "accent-fg", "ok"]) {
+    for (const key of ["bg", "surface", "surface-2", "border", "fg", "muted", "accent", "accent-fg", "ok", "danger"]) {
       expect(t[key], `--${key}`).toMatch(/^#[0-9a-fA-F]{6}$/);
     }
   });
