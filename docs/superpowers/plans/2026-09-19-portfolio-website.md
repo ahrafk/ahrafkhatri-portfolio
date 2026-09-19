@@ -2963,7 +2963,7 @@ describe("pipeline phases", () => {
   it("starts on the completed frame and wraps cleanly", () => {
     expect(phaseFromCursor(INITIAL_CURSOR)).toBe("hold");
     expect(phaseFromCursor(INITIAL_CURSOR + 1)).toBe("raw");
-    expect(phaseFromCursor(INITIAL_CURSOR + 7)).toBe("parse");
+    expect(phaseFromCursor(INITIAL_CURSOR + 8)).toBe("parse");
     expect(phaseFromCursor(-1)).toBe("hold");
   });
   it("keeps a full cycle between 7 and 11 seconds", () => {
