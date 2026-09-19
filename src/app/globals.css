@@ -103,6 +103,10 @@
   animation-play-state: paused;
 }
 @media (prefers-reduced-motion: reduce) {
+  /* The edge fade suits a scrolling strip; on a static wrapped list it would dim the first and last pill of each row. */
+  .marquee {
+    mask-image: none;
+  }
   .marquee-track {
     animation: none;
     width: auto;
