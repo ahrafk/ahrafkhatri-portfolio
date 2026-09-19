@@ -131,3 +131,13 @@
 .tech-chip:hover .tech-icon {
   color: color-mix(in oklab, var(--brand, var(--accent)) 65%, var(--fg));
 }
+/* Dark theme: mixing a dark brand (Django, NumPy, Pandas) 65% into the light foreground makes hover dimmer than the idle muted icon.
+   A 25% brand share keeps every logo at least as bright as idle (hover contrast >= 7.6:1 vs 7.14:1 idle) while still tinting it;
+   the border is lifted toward that same tint so it is never darker than idle. */
+.dark .tech-chip:hover {
+  --tech-hover: color-mix(in oklab, var(--brand, var(--accent)) 25%, var(--fg));
+  border-color: color-mix(in oklab, var(--tech-hover) 30%, var(--border));
+}
+.dark .tech-chip:hover .tech-icon {
+  color: var(--tech-hover);
+}
