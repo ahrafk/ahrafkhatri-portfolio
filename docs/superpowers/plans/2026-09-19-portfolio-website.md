@@ -5600,7 +5600,7 @@ test.describe("hero pipeline", () => {
     const frozen = await el.getAttribute("data-phase");
     await page.waitForTimeout(2800);
     expect(await el.getAttribute("data-phase")).toBe(frozen);
-    await expect(page.getByRole("button", { name: "Play animation" })).toHaveAttribute("aria-pressed", "true");
+    await expect(page.getByRole("button", { name: "Pause animation" })).toHaveAttribute("aria-pressed", "true");
   });
 
   test("reduced motion shows the finished frame and hides the pause control", async ({ browser }) => {
@@ -5682,7 +5682,7 @@ test.describe("sections", () => {
     await page.goto("/");
     const button = page.getByRole("button", { name: "Pause capabilities scroll" });
     await button.click();
-    await expect(page.getByRole("button", { name: "Play capabilities scroll" })).toHaveAttribute("aria-pressed", "true");
+    await expect(page.getByRole("button", { name: "Pause capabilities scroll" })).toHaveAttribute("aria-pressed", "true");
   });
 
   test("testimonials use monograms, never images", async ({ page }) => {
