@@ -52,14 +52,14 @@ export default async function CaseStudyPage({ params }: Props) {
         <Container className="max-w-[860px]">
           <nav aria-label="Breadcrumb">
             <ol className="flex flex-wrap items-center gap-1.5 text-sm text-muted">
-              <li>
+              <li className="flex items-center gap-1.5">
                 <Link href="/" className="hover:text-fg">Home</Link>
+                <ChevronRight className="size-3.5" aria-hidden />
               </li>
-              <ChevronRight className="size-3.5" aria-hidden />
-              <li>
+              <li className="flex items-center gap-1.5">
                 <Link href="/#case-studies" className="hover:text-fg">Case studies</Link>
+                <ChevronRight className="size-3.5" aria-hidden />
               </li>
-              <ChevronRight className="size-3.5" aria-hidden />
               <li aria-current="page" className="text-fg">{cs.title}</li>
             </ol>
           </nav>
