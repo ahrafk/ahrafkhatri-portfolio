@@ -1,0 +1,35 @@
+export type HeadlineSegment = { text: string; accent?: boolean };
+
+export type Hero = {
+  eyebrow: string;
+  headline: HeadlineSegment[][];
+  intro: string;
+  ticks: string[];
+  primaryCta: { label: string; href: string };
+  secondaryCta: { label: string; href: string };
+  facts: { icon: "pin" | "clock" | "globe" | "layers" | "badge"; label: string }[];
+};
+
+export const hero: Hero = {
+  eyebrow: "Data Engineer | Web Intelligence Consultant",
+  headline: [[{ text: "Turn Difficult Websites" }], [{ text: "Into" }, { text: "Reliable Data.", accent: true }]],
+  intro:
+    "I build production-grade web scraping and data extraction systems for startups, businesses, research teams, and enterprises that need data at scale.",
+  ticks: [
+    "Complex web scraping",
+    "Scalable data pipelines",
+    "Anti-bot aware solutions",
+    "Cloud-ready infrastructure",
+    "OCR & document extraction",
+    "Reliable & ethical data solutions",
+  ],
+  primaryCta: { label: "Discuss Your Project", href: "/#contact" },
+  secondaryCta: { label: "View Case Studies", href: "/#case-studies" },
+  facts: [
+    { icon: "pin", label: "Mumbai, India" },
+    { icon: "clock", label: "5+ Years Experience" },
+    { icon: "globe", label: "Global Clients" },
+    { icon: "layers", label: "Scalable Solutions" },
+    { icon: "badge", label: "Reliable & Ethical" },
+  ],
+};
