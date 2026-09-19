@@ -15,7 +15,7 @@ type Props = {
 };
 
 const base =
-  "group inline-flex min-h-11 items-center justify-center gap-2 rounded-lg px-5 text-sm font-semibold transition-[transform,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 active:scale-[0.97]";
+  "group inline-flex min-h-11 items-center justify-center gap-2 rounded-lg px-5 text-sm font-semibold transition-[transform,translate,scale,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 active:scale-[0.97]";
 
 const variants: Record<Variant, string> = {
   primary: "bg-accent text-accent-fg shadow-[0_8px_24px_-10px_rgb(var(--glow)/0.7)] hover:brightness-110",
