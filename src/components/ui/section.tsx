@@ -2,9 +2,16 @@ import type { ReactNode } from "react";
 import { cn } from "@/lib/cn";
 import { Reveal } from "./reveal";
 
+/**
+ * A landing-page section and the target of its nav anchor. `scroll-margin-top` here is the only anchor
+ * offset on the page (`html` sets no `scroll-padding-top`), and it is negative on purpose: the section's
+ * own top padding, 5rem and 7rem from `sm`, is already larger than the 4rem fixed header, so the offset
+ * has to give some of that padding back. The values land the section's heading 2.5rem below the header
+ * and still leave the eyebrow line above it clear of the header.
+ */
 export function Section({ id, className, children }: { id: string; className?: string; children: ReactNode }) {
   return (
-    <section id={id} aria-labelledby={`${id}-title`} className={cn("scroll-mt-20 py-20 sm:py-28", className)}>
+    <section id={id} aria-labelledby={`${id}-title`} className={cn("-scroll-mt-1 py-20 sm:-scroll-mt-9 sm:py-28", className)}>
       {children}
     </section>
   );
