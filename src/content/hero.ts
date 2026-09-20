@@ -12,7 +12,9 @@ export type Hero = {
 
 export const hero: Hero = {
   eyebrow: "Data Engineer | Web Intelligence Consultant",
-  headline: [[{ text: "Turn Difficult Websites" }], [{ text: "Into" }, { text: "Reliable Data.", accent: true }]],
+  // Three deliberate lines. Concatenated with single spaces they must still read
+  // "Turn Difficult Websites Into Reliable Data." (`content.test.ts` enforces it).
+  headline: [[{ text: "Turn Difficult" }], [{ text: "Websites Into" }], [{ text: "Reliable Data.", accent: true }]],
   intro:
     "I build production-grade web scraping and data extraction systems for startups, businesses, research teams, and enterprises that need data at scale.",
   ticks: [

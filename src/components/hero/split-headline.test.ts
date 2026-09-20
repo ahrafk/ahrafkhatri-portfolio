@@ -16,6 +16,7 @@ describe("splitHeadline", () => {
     expect(flat.filter((w) => w.accent).map((w) => w.text)).toEqual(["Reliable", "Data."]);
   });
   it("marks the final word of each line", () => {
-    expect(lines.map((l) => l.filter((w) => w.last).map((w) => w.text))).toEqual([["Websites"], ["Data."]]);
+    // The headline is authored as three intentional lines: "Turn Difficult" / "Websites Into" / "Reliable Data."
+    expect(lines.map((l) => l.filter((w) => w.last).map((w) => w.text))).toEqual([["Difficult"], ["Into"], ["Data."]]);
   });
 });
