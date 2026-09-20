@@ -8,7 +8,10 @@ import { HeroHeadline } from "./hero-headline";
 
 const factIcons = { pin: MapPin, clock: Clock, globe: Globe, layers: Layers, badge: BadgeCheck } as const;
 
-/** Stagger step for the `.hero-in` entrance (see globals.css); the value is multiplied by 70ms. */
+/**
+ * Stagger step for the `.hero-in` entrance (see globals.css); the delay is `--i` x 70ms.
+ * Steps 2 and 3 are skipped on purpose: the headline's own word-by-word rise fills that beat.
+ */
 const step = (i: number) => ({ "--i": i }) as CSSProperties;
 
 export function Hero() {

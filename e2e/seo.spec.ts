@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { caseStudies } from "@/content/case-studies";
+import { hero } from "@/content/hero";
 
 type Node = Record<string, unknown>;
 
@@ -35,16 +36,17 @@ test.describe("server-rendered HTML with JavaScript disabled", () => {
     await page.goto("/");
     await page.waitForTimeout(2000);
     const result = await page.evaluate(() => {
-      const hero = document.querySelector('section[aria-labelledby="hero-title"]')!;
-      const animated = [...hero.querySelectorAll(".hero-in, #hero-title .hero-rise")];
+      const section = document.querySelector('section[aria-labelledby="hero-title"]')!;
+      const animated = [...section.querySelectorAll(".hero-in, #hero-title .hero-rise")];
       const stillHidden = animated.filter((el) => {
         const s = getComputedStyle(el);
         return s.opacity !== "1" || !["none", "matrix(1, 0, 0, 1, 0, 0)"].includes(s.transform);
       });
       return { count: animated.length, stillHidden: stillHidden.map((el) => el.textContent!.trim().slice(0, 30)) };
     });
-    // eyebrow, intro, ticks, CTAs, facts row and the six headline words.
-    expect(result.count).toBe(11);
+    // Eyebrow, intro, ticks, CTAs and the facts row, plus one masked span per headline word.
+    const words = hero.headline.flatMap((line) => line.flatMap((segment) => segment.text.split(" "))).length;
+    expect(result.count).toBe(5 + words);
     expect(result.stillHidden).toEqual([]);
   });
 

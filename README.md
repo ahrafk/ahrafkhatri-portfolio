@@ -90,8 +90,9 @@ slowdown. Six runs per page; the median is given with the full range in brackets
 The home page misses the 95 performance target in about half of its runs. Its
 score is limited entirely by Largest Contentful Paint: under Lighthouse's
 simulated throttling, LCP is charged for everything the page downloads before
-its first paint, which is about 368 KB, and roughly 200 KB of that is the
-React and Next.js client runtime. Accessibility, Best Practices and SEO hit
+its first paint. That is about 368 KB: 206 KB of JavaScript, of which roughly
+140 KB is the React and Next.js client runtime, plus 86 KB of fonts and a
+75 KB document. Accessibility, Best Practices and SEO hit
 their targets, layout shift is zero, and on an unthrottled connection the
 observed LCP is about 140 ms. One home-page run in six reported accessibility
 96, from two intermittent axe findings: the hero sample's dimmed code lines
