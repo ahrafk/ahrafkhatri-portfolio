@@ -1,4 +1,12 @@
-const raw = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+// NEXT_PUBLIC_* is inlined when `next build` runs, so this guard fires at build time and never at runtime.
+// An empty value counts as unset: it would otherwise produce relative canonical, sitemap and JSON-LD URLs.
+if (process.env.NODE_ENV === "production" && !process.env.NEXT_PUBLIC_SITE_URL) {
+  throw new Error(
+    "NEXT_PUBLIC_SITE_URL must be set before `next build` (for example https://your-domain.com; see the README's Configuration section).",
+  );
+}
+
+const raw = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
 export const SITE_URL = raw.replace(/\/+$/, "");
 

@@ -9,7 +9,7 @@ extraction-pipeline hero, a working contact form, and SEO, AEO and GEO built in.
 | Command | What it does |
 |---|---|
 | `npm run dev` | Development server on http://localhost:3000 |
-| `npm run build && npm start` | Production build and server |
+| `NEXT_PUBLIC_SITE_URL=http://localhost:3000 npm run build && npm start` | Production build and server. The build refuses to run without `NEXT_PUBLIC_SITE_URL` (see Configuration); `.env.local` also supplies it |
 | `npm test` | Unit tests (Vitest) |
 | `npm run e2e` | End-to-end tests (Playwright) |
 | `npm run lighthouse` | Lighthouse audit against a running production server on port 3100 |
@@ -28,7 +28,7 @@ or `next start` of this project is using `.next` or port 3100.
 `npm run lighthouse` needs you to start that server yourself first:
 
 ```bash
-npm run build
+NEXT_PUBLIC_SITE_URL=http://127.0.0.1:3100 npm run build
 RESEND_API_KEY= NEXT_PUBLIC_SITE_URL=http://127.0.0.1:3100 npx next start -p 3100
 npm run lighthouse          # audits / and /case-studies/real-estate-scraping
 ```
@@ -43,7 +43,7 @@ Copy `.env.example` to `.env.local`.
 
 | Variable | Purpose |
 |---|---|
-| `NEXT_PUBLIC_SITE_URL` | Canonical origin, no trailing slash. Drives canonical URLs, the sitemap, JSON-LD and `llms.txt`. Required in production. It is baked in when `next build` runs (the metadata routes are prerendered), so it must be set at build time and not just at runtime, and it must be non-empty: an empty value is not treated as unset and produces relative URLs. |
+| `NEXT_PUBLIC_SITE_URL` | Canonical origin, no trailing slash. Drives canonical URLs, the sitemap, JSON-LD and `llms.txt`. Required in production: `next build` fails with an error if it is unset or empty, so a deploy can never ship localhost canonicals. It is baked in when `next build` runs (the metadata routes are prerendered), so it must be set at build time and not just at runtime. `next dev` and the tests fall back to `http://localhost:3000`. |
 | `RESEND_API_KEY` | Enables email delivery from the contact form. Without it, the form opens the visitor's mail client instead. |
 | `CONTACT_TO_EMAIL` | Where enquiries are delivered. Defaults to the email in `src/content/site.ts`. |
 | `CONTACT_FROM_EMAIL` | Verified sender, for example `Portfolio <hello@yourdomain.com>`. Defaults to Resend's test sender. |
