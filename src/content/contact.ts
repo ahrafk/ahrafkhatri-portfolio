@@ -38,6 +38,7 @@ export const contactCopy = {
   },
   submit: "Send message",
   submitting: "Sending…",
+  sendingStatus: "Sending your message…",
   success: "Thanks, your message is on its way. I'll reply by email soon.",
   fallback: "Email isn't configured on the server yet, so I've opened your email app with your message filled in.",
   error: "Something went wrong sending your message. Please try again, or email me directly.",

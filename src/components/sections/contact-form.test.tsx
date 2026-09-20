@@ -2,6 +2,7 @@
 import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { contactCopy } from "@/content/contact";
 
 vi.mock("@/lib/contact", async (importOriginal) => ({
   ...(await importOriginal<typeof import("@/lib/contact")>()),
@@ -98,5 +99,72 @@ describe("ContactForm", () => {
     await send(user);
 
     await waitFor(() => expect(screen.getByRole("alert")).toHaveTextContent(/something went wrong/i));
+  });
+
+  it("announces the submitting state, keeps focus on the button and ignores a second submit while pending", async () => {
+    let resolveFetch: (value: { ok: boolean; status: number }) => void = () => {};
+    const fetchMock = vi.fn().mockReturnValue(new Promise((resolve) => (resolveFetch = resolve)));
+    vi.stubGlobal("fetch", fetchMock);
+    const user = userEvent.setup();
+    const { container } = render(<ContactForm />);
+
+    await fillValid(user);
+    await send(user);
+
+    const region = container.querySelector('[aria-live="polite"]');
+    expect(region).toHaveTextContent(contactCopy.sendingStatus);
+    const button = screen.getByRole("button", { name: contactCopy.submitting });
+    expect(button).toHaveAttribute("aria-disabled", "true");
+    expect(button).not.toHaveAttribute("disabled");
+    expect(button).toHaveFocus();
+
+    await user.click(button);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+
+    resolveFetch({ ok: true, status: 200 });
+    expect(await screen.findByText(/your message is on its way/i)).toBeInTheDocument();
+    expect(region).not.toHaveTextContent(contactCopy.sendingStatus);
+    expect(screen.getByRole("button", { name: "Send message" })).toHaveAttribute("aria-disabled", "false");
+  });
+
+  it("shows server field errors from a 422 and focuses the first invalid field", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        ok: false,
+        status: 422,
+        json: async () => ({ error: "validation", fieldErrors: { message: ["Server rejected the message"], email: ["Server rejected the email"] } }),
+      }),
+    );
+    const user = userEvent.setup();
+    render(<ContactForm />);
+
+    await fillValid(user);
+    await send(user);
+
+    expect(await screen.findByText("Server rejected the email")).toBeInTheDocument();
+    expect(screen.getByText("Server rejected the message")).toBeInTheDocument();
+    const email = screen.getByLabelText("Email");
+    expect(email).toHaveAttribute("aria-invalid", "true");
+    expect(email).toHaveAttribute("aria-describedby", "contact-email-error");
+    await waitFor(() => expect(email).toHaveFocus());
+  });
+
+  it.each([
+    ["an empty fieldErrors object", { error: "validation", fieldErrors: {} }],
+    ["no fieldErrors at all", { error: "validation" }],
+    ["only unknown field names", { error: "validation", fieldErrors: { website: ["nope"] } }],
+  ])("shows a generic error in the live region when a 422 carries %s", async (_label, body) => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: false, status: 422, json: async () => body }));
+    const user = userEvent.setup();
+    const { container } = render(<ContactForm />);
+
+    await fillValid(user);
+    await send(user);
+
+    const alert = await screen.findByRole("alert");
+    expect(alert).toHaveTextContent(contactCopy.error);
+    expect(container.querySelector('[aria-live="polite"]')).toContainElement(alert);
+    expect(screen.getByLabelText("Name")).not.toHaveAttribute("aria-invalid", "true");
   });
 });
