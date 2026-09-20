@@ -26,6 +26,13 @@ describe("home graph", () => {
     expect(types).toEqual(expect.arrayContaining(["Person", "ProfessionalService", "WebSite", "FAQPage"]));
   });
 
+  it("gives the person and the service the same plain email address", () => {
+    const person = graph.find((n) => n["@type"] === "Person") as Node;
+    const service = graph.find((n) => n["@type"] === "ProfessionalService") as Node;
+    expect(person.email).toBe(site.email);
+    expect(service.email).toBe(site.email);
+  });
+
   it("links the person to LinkedIn and GitHub via sameAs", () => {
     const person = graph.find((n) => n["@type"] === "Person") as Node;
     expect(person.sameAs).toEqual([site.social.linkedin, site.social.github]);

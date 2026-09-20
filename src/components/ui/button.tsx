@@ -9,7 +9,6 @@ type Props = {
   href: string;
   variant?: Variant;
   arrow?: boolean;
-  external?: boolean;
   className?: string;
   children: ReactNode;
 };
@@ -23,7 +22,7 @@ const variants: Record<Variant, string> = {
   ghost: "text-fg hover:bg-surface-2",
 };
 
-export function Button({ href, variant = "primary", arrow, external, className, children }: Props) {
+export function Button({ href, variant = "primary", arrow, className, children }: Props) {
   const classes = cn(base, variants[variant], className);
   const content = (
     <>
@@ -32,9 +31,9 @@ export function Button({ href, variant = "primary", arrow, external, className, 
     </>
   );
 
-  if (external || href.startsWith("mailto:") || href.startsWith("http")) {
+  if (href.startsWith("mailto:") || href.startsWith("http")) {
     return (
-      <a href={href} className={classes} {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}>
+      <a href={href} className={classes}>
         {content}
       </a>
     );

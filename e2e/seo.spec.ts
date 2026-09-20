@@ -52,7 +52,7 @@ test.describe("server-rendered HTML with JavaScript disabled", () => {
 
   test("every homepage section is present in the HTML", async ({ page }) => {
     await page.goto("/");
-    for (const id of ["services", "about", "case-studies", "tech-stack", "testimonials", "faq", "contact"]) {
+    for (const id of ["capabilities", "services", "about", "case-studies", "tech-stack", "testimonials", "faq", "contact"]) {
       await expect(page.locator(`section#${id}`)).toHaveCount(1);
     }
   });

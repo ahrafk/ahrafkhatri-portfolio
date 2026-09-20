@@ -20,7 +20,7 @@ export function CapabilitiesMarquee() {
   const [paused, setPaused] = useState(false);
 
   return (
-    <section aria-label="Capabilities" className="border-y border-line bg-surface/40">
+    <section id="capabilities" aria-label="Capabilities" className="border-y border-line bg-surface/40">
       <Container className="flex items-center gap-4 py-5 sm:gap-8">
         <p className="hidden shrink-0 font-mono text-[11px] uppercase tracking-[0.18em] text-muted sm:block">
           {sectionCopy.capabilities.label}

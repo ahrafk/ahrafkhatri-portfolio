@@ -26,7 +26,7 @@ export function personSchema(): Node {
     url: SITE_URL,
     jobTitle: site.jobTitle,
     description: site.description,
-    email: `mailto:${site.email}`,
+    email: site.email,
     address,
     knowsAbout: [...site.knowsAbout],
     sameAs: [site.social.linkedin, site.social.github],

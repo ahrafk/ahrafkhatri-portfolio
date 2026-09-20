@@ -1,3 +1,4 @@
+import { hero } from "@/content/hero";
 import { site } from "@/content/site";
 import { renderOg } from "@/lib/og";
 
@@ -7,8 +8,9 @@ export const contentType = "image/png";
 
 export default function Image() {
   return renderOg({
-    eyebrow: "Data Engineer · Web Intelligence Consultant",
-    title: "Turn Difficult Websites Into Reliable Data.",
+    // Same words as the hero; the card just uses a middle dot where the hero uses a pipe.
+    eyebrow: hero.eyebrow.replaceAll(" | ", " · "),
+    title: hero.headline.flat().map((segment) => segment.text).join(" "),
     subtitle: site.description,
   });
 }
