@@ -29,6 +29,25 @@ test.describe("server-rendered HTML with JavaScript disabled", () => {
     expect(hidden).toBe(0);
   });
 
+  // The hero does not use `Reveal`, so the `[data-reveal]` noscript override above does not cover it:
+  // its entrance is a CSS animation that has to end with everything visible on its own.
+  test("the hero's CSS entrance ends visible without JS", async ({ page }) => {
+    await page.goto("/");
+    await page.waitForTimeout(2000);
+    const result = await page.evaluate(() => {
+      const hero = document.querySelector('section[aria-labelledby="hero-title"]')!;
+      const animated = [...hero.querySelectorAll(".hero-in, #hero-title .hero-rise")];
+      const stillHidden = animated.filter((el) => {
+        const s = getComputedStyle(el);
+        return s.opacity !== "1" || !["none", "matrix(1, 0, 0, 1, 0, 0)"].includes(s.transform);
+      });
+      return { count: animated.length, stillHidden: stillHidden.map((el) => el.textContent!.trim().slice(0, 30)) };
+    });
+    // eyebrow, intro, ticks, CTAs, facts row and the six headline words.
+    expect(result.count).toBe(11);
+    expect(result.stillHidden).toEqual([]);
+  });
+
   test("every homepage section is present in the HTML", async ({ page }) => {
     await page.goto("/");
     for (const id of ["services", "about", "case-studies", "tech-stack", "testimonials", "faq", "contact"]) {
