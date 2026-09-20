@@ -2,10 +2,8 @@
 
 import { CircleAlert, CircleCheck, LoaderCircle, Send } from "lucide-react";
 import { useRef, useState, type FormEvent } from "react";
-import { z } from "zod";
 import { budgetLabels, budgetValues, contactCopy, projectTypeLabels, projectTypeValues } from "@/content/contact";
 import { cn } from "@/lib/cn";
-import { buildMailto, contactSchema, openMailClient } from "@/lib/contact";
 
 type Status = "idle" | "submitting" | "success" | "fallback" | "error" | "rate-limited";
 type FieldName = "name" | "email" | "projectType" | "budget" | "message";
@@ -26,6 +24,21 @@ function usableFieldErrors(value: unknown): FieldErrors {
     if (Array.isArray(list) && typeof list[0] === "string") out[name] = list as string[];
   }
   return out;
+}
+
+type Validation = readonly [typeof import("@/lib/contact"), typeof import("zod")];
+let validation: Promise<Validation> | undefined;
+
+/**
+ * Zod and the schema are only needed once someone submits, so they load on demand (and are warmed when a field first
+ * receives focus) instead of shipping in the initial bundle, which keeps the main-thread work before first paint small.
+ */
+function loadValidation(): Promise<Validation> {
+  validation ??= Promise.all([import("@/lib/contact"), import("zod")]).catch((error: unknown) => {
+    validation = undefined; // let the next attempt retry after a network failure
+    throw error;
+  });
+  return validation;
 }
 
 /** Runs after React has rendered aria-invalid, so the first invalid field in document order receives focus. */
@@ -56,28 +69,30 @@ export function ContactForm() {
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (inFlight.current) return;
+    // Set before the first await so a second submit during the lazy validation load is ignored too.
+    inFlight.current = true;
     const form = event.currentTarget;
     const raw = Object.fromEntries(new FormData(form).entries()) as Record<string, string>;
-    const parsed = contactSchema.safeParse({
-      name: raw.name,
-      email: raw.email,
-      projectType: raw.projectType,
-      budget: raw.budget || undefined,
-      message: raw.message,
-      website: raw.website ?? "",
-    });
-
-    if (!parsed.success) {
-      setErrors(z.flattenError(parsed.error).fieldErrors as FieldErrors);
-      setStatus("idle");
-      focusFirstInvalid(form);
-      return;
-    }
-
-    setErrors({});
-    setStatus("submitting");
-    inFlight.current = true;
     try {
+      const [{ buildMailto, contactSchema, openMailClient }, { z }] = await loadValidation();
+      const parsed = contactSchema.safeParse({
+        name: raw.name,
+        email: raw.email,
+        projectType: raw.projectType,
+        budget: raw.budget || undefined,
+        message: raw.message,
+        website: raw.website ?? "",
+      });
+
+      if (!parsed.success) {
+        setErrors(z.flattenError(parsed.error).fieldErrors as FieldErrors);
+        setStatus("idle");
+        focusFirstInvalid(form);
+        return;
+      }
+
+      setErrors({});
+      setStatus("submitting");
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -116,7 +131,7 @@ export function ContactForm() {
   }
 
   return (
-    <form onSubmit={onSubmit} noValidate className="relative space-y-5">
+    <form onSubmit={onSubmit} onFocus={() => void loadValidation().catch(() => {})} noValidate className="relative space-y-5">
       <div className="grid gap-5 sm:grid-cols-2">
         <div>
           <label htmlFor="contact-name" className={label}>{contactCopy.fields.name}</label>
