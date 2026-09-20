@@ -76,11 +76,15 @@ export function Footer() {
         </div>
       </Container>
 
-      <Container className="flex flex-col gap-2 border-t border-line py-6 text-sm text-muted sm:flex-row sm:items-center sm:justify-between">
-        <p>
-          © {new Date().getFullYear()} {site.name}. All rights reserved.
-        </p>
-        <p>Building a more open and data-driven world.</p>
+      {/* The rule sits on an inner element so it ends where the columns above it end,
+          instead of running out into the Container's horizontal padding. */}
+      <Container>
+        <div className="flex flex-col gap-2 border-t border-line py-6 text-sm text-muted sm:flex-row sm:items-center sm:justify-between">
+          <p>
+            © {new Date().getFullYear()} {site.name}. All rights reserved.
+          </p>
+          <p>Building a more open and data-driven world.</p>
+        </div>
       </Container>
     </footer>
   );

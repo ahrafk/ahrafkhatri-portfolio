@@ -15,7 +15,9 @@ export function About() {
   return (
     <Section id="about">
       <Container>
-        <div className="grid gap-6 lg:grid-cols-[1.2fr_0.9fr_0.9fr]">
+        {/* `lg:items-start`: the two cards hold a few lines each, so stretching them to the text column's
+            height would leave most of each card empty. */}
+        <div className="grid gap-6 lg:grid-cols-[1.2fr_0.9fr_0.9fr] lg:items-start">
           <Reveal>
             <p className="font-mono text-xs uppercase tracking-[0.18em] text-accent">{copy.eyebrow}</p>
             <h2 id="about-title" className="mt-3 text-balance text-3xl font-semibold tracking-[-0.02em] sm:text-4xl">
@@ -31,8 +33,8 @@ export function About() {
             </Button>
           </Reveal>
 
-          <Reveal delay={0.08} className="h-full">
-            <ul className="h-full space-y-1 rounded-2xl border border-line bg-surface p-5">
+          <Reveal delay={0.08}>
+            <ul className="space-y-1 rounded-2xl border border-line bg-surface p-5">
               <li className={rowClass}>
                 <MapPin className="size-5 text-accent" aria-hidden />
                 {site.location.locality}, {site.location.country}
@@ -58,8 +60,8 @@ export function About() {
             </ul>
           </Reveal>
 
-          <Reveal delay={0.16} className="h-full">
-            <figure className="h-full rounded-2xl border border-line bg-surface-2 p-6">
+          <Reveal delay={0.16}>
+            <figure className="rounded-2xl border border-line bg-surface-2 p-6">
               <Quote className="size-8 text-accent/40" aria-hidden />
               <blockquote className="mt-4 text-pretty text-xl leading-snug">{about.quote}</blockquote>
               <figcaption className="mt-6 text-sm font-medium text-muted">{site.name}</figcaption>

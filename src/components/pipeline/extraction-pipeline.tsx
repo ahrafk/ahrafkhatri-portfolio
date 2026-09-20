@@ -2,7 +2,7 @@
 
 import { animate, useReducedMotion } from "motion/react";
 import * as m from "motion/react-m";
-import { CircleCheck, Pause, Play } from "lucide-react";
+import { CircleCheck, Pause } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { EASE_OUT } from "@/components/ui/reveal";
 import { cn } from "@/lib/cn";
@@ -186,15 +186,17 @@ export function ExtractionPipeline() {
         </div>
       </div>
 
-      {/* Always rendered so server and client markup match; the media query hides it (and drops it from the a11y tree) under reduced motion. */}
+      {/* Always rendered so server and client markup match; the media query hides it (and drops it from the a11y tree) under reduced motion.
+          The icon stays a Pause glyph because the label is always "Pause animation": the pressed state is shown by the
+          accent colour and tint, so the icon, the label and `aria-pressed` never contradict each other. */}
       <div className="mt-2 flex justify-end motion-reduce:hidden">
         <button
           type="button"
           onClick={() => setPaused((p) => !p)}
           aria-pressed={paused}
-          className="inline-flex min-h-11 items-center gap-2 rounded-lg px-3 text-xs text-muted transition-colors hover:text-fg"
+          className="inline-flex min-h-11 items-center gap-2 rounded-lg px-3 text-xs text-muted transition-colors hover:text-fg aria-pressed:bg-surface-2 aria-pressed:text-accent"
         >
-          {paused ? <Play className="size-3.5" aria-hidden /> : <Pause className="size-3.5" aria-hidden />}
+          <Pause className="size-3.5" aria-hidden />
           Pause animation
         </button>
       </div>
