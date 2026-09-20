@@ -102,6 +102,8 @@ export function ContactForm() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(parsed.data),
+        // A hung API must not leave "Sending…" forever: the timeout rejects, and the catch below shows the error state.
+        signal: AbortSignal.timeout(15_000),
       });
       if (res.ok) {
         form.reset();

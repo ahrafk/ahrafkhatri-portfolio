@@ -32,6 +32,19 @@ describe("contactSchema", () => {
     }
   });
 
+  it.each([["LF", "Test\nPerson"], ["CRLF", "Test\r\nBcc: victim@example.com"], ["CR", "Test\rPerson"]])(
+    "rejects a name containing a %s line break with the friendly message",
+    (_label, name) => {
+      const r = contactSchema.safeParse({ ...valid, name });
+      expect(r.success).toBe(false);
+      if (!r.success) expect(z.flattenError(r.error).fieldErrors.name?.[0]).toBe("Please enter your name");
+    },
+  );
+
+  it("still accepts a name with an ordinary internal space", () => {
+    expect(contactSchema.safeParse({ ...valid, name: "Mary Jane Watson" }).success).toBe(true);
+  });
+
   it("treats budget as optional but rejects unknown values", () => {
     expect(contactSchema.safeParse(valid).success).toBe(true);
     expect(contactSchema.safeParse({ ...valid, budget: "under-2k" }).success).toBe(true);

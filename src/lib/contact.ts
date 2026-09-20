@@ -3,7 +3,8 @@ import { budgetLabels, budgetValues, contactCopy, projectTypeLabels, projectType
 import { site } from "@/content/site";
 
 export const contactSchema = z.object({
-  name: z.string().trim().min(2, contactCopy.validation.name).max(80),
+  // No line breaks: the name goes into the email subject, where CR/LF would inject headers or split the line.
+  name: z.string().trim().min(2, contactCopy.validation.name).max(80).regex(/^[^\r\n]*$/, contactCopy.validation.name),
   email: z.string().trim().max(120).pipe(z.email(contactCopy.validation.email)),
   projectType: z.enum(projectTypeValues, { error: contactCopy.validation.projectType }),
   budget: z.enum(budgetValues).optional(),

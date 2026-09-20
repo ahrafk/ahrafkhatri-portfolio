@@ -12,10 +12,24 @@ const limiter = createRateLimiter({ limit: 5, windowMs: 10 * 60 * 1000 });
 
 const json = (body: unknown, status = 200, headers?: HeadersInit) => Response.json(body, { status, headers });
 
+/** The schema's maximum total is about 4.4 KB; anything far above this is not a real submission. */
+const MAX_BODY_BYTES = 16_384;
+
+/**
+ * Trust model: the first `x-forwarded-for` entry is taken as the client (correct on Vercel, which overwrites the header).
+ * Behind a proxy that does not set it, `x-real-ip` is used. With neither, everyone shares the "unknown" bucket.
+ */
+function clientKey(request: Request): string {
+  const forwarded = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
+  return forwarded || request.headers.get("x-real-ip")?.trim() || "unknown";
+}
+
 export async function POST(request: Request) {
-  const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
-  const limit = limiter.check(ip);
+  const limit = limiter.check(clientKey(request));
   if (!limit.ok) return json({ error: "rate_limited" }, 429, { "Retry-After": String(limit.retryAfterSeconds) });
+
+  // Checked before the body is parsed, so an oversized payload is refused without being read.
+  if (Number(request.headers.get("content-length")) > MAX_BODY_BYTES) return json({ error: "too_large" }, 413);
 
   let body: unknown;
   try {

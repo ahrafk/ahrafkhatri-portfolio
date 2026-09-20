@@ -50,6 +50,11 @@ Copy `.env.example` to `.env.local`.
 | `CHROME_PATH` | Where Lighthouse finds Chrome. Defaults to `/usr/bin/google-chrome`. |
 | `LH_BASE_URL` | Origin `npm run lighthouse` audits. Defaults to `http://127.0.0.1:3100`. |
 
+The contact form's rate limiter (5 messages per 10 minutes per visitor, kept in
+memory per server instance) trusts the first `x-forwarded-for` entry, which is
+correct on Vercel; behind your own proxy make sure it sets `x-forwarded-for` or
+`x-real-ip`, or every visitor shares one bucket.
+
 The build downloads Geist and JetBrains Mono from Google Fonts once
 (`next/font/google` self-hosts them in the build output, so visitors never
 contact Google). If the build machine has no network, switch the two font

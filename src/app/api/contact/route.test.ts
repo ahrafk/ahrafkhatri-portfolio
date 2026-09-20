@@ -81,6 +81,41 @@ describe("POST /api/contact", () => {
     expect((await post(valid)).status).toBe(502);
   });
 
+  it("returns 413 without reading the body when content-length is far above the schema's maximum", async () => {
+    const res = await POST(
+      new Request("http://localhost/api/contact", {
+        method: "POST",
+        headers: { "content-type": "application/json", "content-length": "20000", "x-forwarded-for": `10.1.0.${++counter}` },
+        body: JSON.stringify(valid),
+      }),
+    );
+    expect(res.status).toBe(413);
+    expect(await res.json()).toEqual({ error: "too_large" });
+    expect(send).not.toHaveBeenCalled();
+  });
+
+  it("still accepts a request with no content-length header or one exactly at the limit", async () => {
+    expect((await post(valid)).status).toBe(200);
+    const atLimit = await POST(
+      new Request("http://localhost/api/contact", {
+        method: "POST",
+        headers: { "content-type": "application/json", "content-length": "16384", "x-forwarded-for": `10.2.0.${++counter}` },
+        body: JSON.stringify(valid),
+      }),
+    );
+    expect(atLimit.status).toBe(200);
+  });
+
+  it("keys the rate limit on x-real-ip when x-forwarded-for is absent or blank", async () => {
+    const fromRealIp = (headers: Record<string, string>) =>
+      POST(new Request("http://localhost/api/contact", { method: "POST", headers: { "content-type": "application/json", ...headers }, body: JSON.stringify(valid) }));
+    const statuses: number[] = [];
+    for (let i = 0; i < 6; i++) statuses.push((await fromRealIp({ "x-real-ip": "198.51.100.7", "x-forwarded-for": " " })).status);
+    expect(statuses).toEqual([200, 200, 200, 200, 200, 429]);
+    // A different x-real-ip is a different visitor.
+    expect((await fromRealIp({ "x-real-ip": "198.51.100.8" })).status).toBe(200);
+  });
+
   it("rate limits repeated submissions from one IP", async () => {
     const ip = "203.0.113.9";
     const statuses: number[] = [];

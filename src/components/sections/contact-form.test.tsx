@@ -101,6 +101,33 @@ describe("ContactForm", () => {
     await waitFor(() => expect(screen.getByRole("alert")).toHaveTextContent(/something went wrong/i));
   });
 
+  it("gives the request a 15 second timeout so a hung API ends in the generic error and re-enables submit", async () => {
+    const timeout = vi.spyOn(AbortSignal, "timeout").mockImplementation(() => {
+      const controller = new AbortController();
+      setTimeout(() => controller.abort(new DOMException("The operation timed out.", "TimeoutError")), 10);
+      return controller.signal;
+    });
+    const fetchMock = vi.fn((_url: string, init: RequestInit) =>
+      new Promise((_resolve, reject) => init.signal?.addEventListener("abort", () => reject(init.signal?.reason))),
+    );
+    vi.stubGlobal("fetch", fetchMock);
+    const user = userEvent.setup();
+    render(<ContactForm />);
+
+    await fillValid(user);
+    await send(user);
+
+    expect(timeout).toHaveBeenCalledWith(15_000);
+    expect(fetchMock.mock.calls[0][1].signal).toBeInstanceOf(AbortSignal);
+    expect(await screen.findByRole("alert")).toHaveTextContent(contactCopy.error);
+    expect(screen.getByRole("button", { name: "Send message" })).toHaveAttribute("aria-disabled", "false");
+
+    // The in-flight guard was released, so the visitor can try again.
+    await send(user);
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    timeout.mockRestore();
+  });
+
   it("announces the submitting state, keeps focus on the button and ignores a second submit while pending", async () => {
     let resolveFetch: (value: { ok: boolean; status: number }) => void = () => {};
     const fetchMock = vi.fn().mockReturnValue(new Promise((resolve) => (resolveFetch = resolve)));
