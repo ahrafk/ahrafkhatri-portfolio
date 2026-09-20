@@ -1,6 +1,6 @@
 "use client";
 
-import { m } from "motion/react";
+import * as m from "motion/react-m";
 import { EASE_OUT } from "@/components/ui/reveal";
 
 const view = { once: true, margin: "0px 0px -10% 0px" } as const;

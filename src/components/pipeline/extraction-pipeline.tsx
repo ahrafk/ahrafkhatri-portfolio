@@ -1,6 +1,7 @@
 "use client";
 
-import { animate, m, useReducedMotion } from "motion/react";
+import { animate, useReducedMotion } from "motion/react";
+import * as m from "motion/react-m";
 import { CircleCheck, Pause, Play } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { EASE_OUT } from "@/components/ui/reveal";

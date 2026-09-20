@@ -1,6 +1,6 @@
 "use client";
 
-import { m } from "motion/react";
+import * as m from "motion/react-m";
 import type { ReactNode } from "react";
 
 export const EASE_OUT = [0.16, 1, 0.3, 1] as const;

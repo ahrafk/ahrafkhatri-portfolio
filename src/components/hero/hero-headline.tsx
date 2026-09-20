@@ -1,6 +1,6 @@
 "use client";
 
-import { m } from "motion/react";
+import * as m from "motion/react-m";
 import { EASE_OUT } from "@/components/ui/reveal";
 import type { HeadlineSegment } from "@/content/hero";
 import { cn } from "@/lib/cn";
