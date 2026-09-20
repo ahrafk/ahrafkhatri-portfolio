@@ -50,10 +50,11 @@ Copy `.env.example` to `.env.local`.
 | `CHROME_PATH` | Where Lighthouse finds Chrome. Defaults to `/usr/bin/google-chrome`. |
 | `LH_BASE_URL` | Origin `npm run lighthouse` audits. Defaults to `http://127.0.0.1:3100`. |
 
-Building the site also reaches Google Fonts for Geist and JetBrains Mono. On
-a machine that cannot, swap the two `next/font/google` calls at the top of
-`src/app/layout.tsx` for `GeistSans` and `GeistMono` from the `geist`
-package, which is already installed and ships the files locally.
+The build downloads Geist and JetBrains Mono from Google Fonts once
+(`next/font/google` self-hosts them in the build output, so visitors never
+contact Google). If the build machine has no network, switch the two font
+calls at the top of `src/app/layout.tsx` to `next/font/local` with the font
+files checked in.
 
 ## Editing content
 

@@ -8,7 +8,6 @@ import { ThemeProvider } from "@/components/providers/theme-provider";
 import { site, SITE_URL } from "@/content/site";
 import "./globals.css";
 
-// If the build machine is offline, swap these for `GeistSans` / `GeistMono` from the `geist` package.
 const sans = Geist({ subsets: ["latin"], variable: "--font-geist-sans", display: "swap" });
 const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrains-mono", display: "swap" });
 
