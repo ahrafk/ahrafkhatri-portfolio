@@ -138,5 +138,14 @@ test.describe("machine-readable endpoints", () => {
   test("unknown routes return a real 404", async ({ request }) => {
     expect((await request.get("/nope")).status()).toBe(404);
     expect((await request.get("/case-studies/nope")).status()).toBe(404);
+    expect((await request.get("/case-studies/nope/opengraph-image")).status()).toBe(404);
+  });
+
+  test("every case study social image is a PNG", async ({ request }) => {
+    for (const cs of caseStudies) {
+      const res = await request.get(`/case-studies/${cs.slug}/opengraph-image`);
+      expect(res.status(), cs.slug).toBe(200);
+      expect(res.headers()["content-type"], cs.slug).toContain("image/png");
+    }
   });
 });
