@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { GeistSans } from "geist/font/sans";
-import { JetBrains_Mono } from "next/font/google";
+import { Geist, JetBrains_Mono } from "next/font/google";
 import type { ReactNode } from "react";
 import { Footer } from "@/components/layout/footer";
 import { Nav } from "@/components/layout/nav";
@@ -9,7 +8,8 @@ import { ThemeProvider } from "@/components/providers/theme-provider";
 import { site, SITE_URL } from "@/content/site";
 import "./globals.css";
 
-// If the build machine is offline, swap this for `GeistMono` from "geist/font/mono".
+// If the build machine is offline, swap these for `GeistSans` / `GeistMono` from the `geist` package.
+const sans = Geist({ subsets: ["latin"], variable: "--font-geist-sans", display: "swap" });
 const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrains-mono", display: "swap" });
 
 export const metadata: Metadata = {
@@ -42,7 +42,7 @@ const NOSCRIPT_CSS = "[data-reveal]{opacity:1!important;transform:none!important
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className={`${GeistSans.variable} ${mono.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`${sans.variable} ${mono.variable}`} suppressHydrationWarning>
       <body className="min-h-dvh antialiased">
         <noscript>
           <style>{NOSCRIPT_CSS}</style>
