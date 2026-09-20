@@ -121,6 +121,100 @@ test.describe("sections", () => {
   });
 });
 
+test.describe("keyboard focus", () => {
+  test.use({ viewport: { width: 1440, height: 900 } });
+
+  type Pg = import("@playwright/test").Page;
+
+  /**
+   * Scroll waiting that a stale event cannot satisfy. `arm` runs BEFORE the action and resets the watcher;
+   * `settled` then waits for a scroll that really started to finish (`scrollend`), or for a long still
+   * window when the action needed no scroll. Frame-counted throughout, never a fixed timeout.
+   */
+  const arm = (page: Pg) =>
+    page.evaluate(() => {
+      const w = window as unknown as { __watch?: { moved: boolean; ended: boolean }; __onScroll?: () => void; __onEnd?: () => void };
+      if (w.__onScroll) window.removeEventListener("scroll", w.__onScroll);
+      if (w.__onEnd) window.removeEventListener("scrollend", w.__onEnd);
+      const watch = { moved: false, ended: false };
+      w.__watch = watch;
+      w.__onScroll = () => {
+        watch.moved = true;
+        watch.ended = false;
+      };
+      w.__onEnd = () => {
+        watch.ended = true;
+      };
+      window.addEventListener("scroll", w.__onScroll, { passive: true });
+      window.addEventListener("scrollend", w.__onEnd);
+    });
+
+  const settled = (page: Pg) =>
+    page.waitForFunction(
+      () =>
+        new Promise((resolve) => {
+          const watch = (window as unknown as { __watch: { moved: boolean; ended: boolean } }).__watch;
+          let idle = 0;
+          let last = window.scrollY;
+          const tick = () => {
+            if (window.scrollY === last) idle++;
+            else {
+              idle = 0;
+              last = window.scrollY;
+            }
+            if (watch.moved && watch.ended && idle >= 3) return resolve(true);
+            if (idle >= 40) return resolve(true);
+            requestAnimationFrame(tick);
+          };
+          requestAnimationFrame(tick);
+        }),
+    );
+
+  const focused = (page: Pg) =>
+    page.evaluate(() => {
+      const el = document.activeElement as HTMLElement;
+      return { name: el.getAttribute("name") ?? el.id ?? el.tagName, top: Math.round(el.getBoundingClientRect().top) };
+    });
+
+  // `html { scroll-padding-top }` in globals.css is what keeps a control the browser scrolls into view
+  // from landing behind the fixed header (WCAG 2.2 AA 2.4.11, Focus Not Obscured). Without it the contact
+  // form's upper fields settle underneath it.
+  test("scrolling a control into view never leaves it behind the fixed header", async ({ page }) => {
+    await page.goto("/");
+    const headerHeight = await page.getByRole("banner").evaluate((el) => el.getBoundingClientRect().height);
+    expect(headerHeight).toBeGreaterThan(0);
+
+    const obscured: { control: string; top: number; headerHeight: number }[] = [];
+    const record = async (label: string) => {
+      await settled(page);
+      const { name, top } = await focused(page);
+      if (top < headerHeight) obscured.push({ control: `${label} (${name})`, top, headerHeight });
+    };
+
+    // Walk back up the contact form from its submit button: every field above it starts off-screen.
+    await arm(page);
+    await page.getByRole("button", { name: "Send message" }).focus();
+    await settled(page);
+    for (const field of ["message", "budget", "project type", "email", "name"]) {
+      await arm(page);
+      await page.keyboard.press("Shift+Tab");
+      await record(`Shift+Tab to ${field}`);
+    }
+
+    // The journey ContactForm makes when validation fails: focus() on a field far off-screen.
+    // Blur first -- the walk above ended on this very field, and focus() on the focused element does nothing.
+    await page.evaluate(() => (document.activeElement as HTMLElement).blur());
+    await arm(page);
+    await page.evaluate(() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "instant" }));
+    await settled(page);
+    await arm(page);
+    await page.getByLabel("Name").focus();
+    await record("programmatic focus on Name");
+
+    expect(obscured).toEqual([]);
+  });
+});
+
 test.describe("contact form", () => {
   test("shows friendly errors and focuses the first invalid field", async ({ page }) => {
     await page.goto("/#contact");

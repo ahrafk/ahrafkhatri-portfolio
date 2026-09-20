@@ -55,6 +55,11 @@
   }
   html {
     scroll-behavior: smooth;
+    /* Matches the fixed header, so anything the browser scrolls into view -- an anchor, a tabbed-to
+       control, or the field `ContactForm` focuses after failed validation -- clears it instead of
+       landing behind it (WCAG 2.2 AA 2.4.11, Focus Not Obscured). `Section` subtracts this again
+       from its own `scroll-margin-top`; see the note there. */
+    scroll-padding-top: 4rem;
     -webkit-text-size-adjust: 100%;
   }
   body {

@@ -3,15 +3,22 @@ import { cn } from "@/lib/cn";
 import { Reveal } from "./reveal";
 
 /**
- * A landing-page section and the target of its nav anchor. `scroll-margin-top` here is the only anchor
- * offset on the page (`html` sets no `scroll-padding-top`), and it is negative on purpose: the section's
- * own top padding, 5rem and 7rem from `sm`, is already larger than the 4rem fixed header, so the offset
- * has to give some of that padding back. The values land the section's heading 2.5rem below the header
- * and still leave the eyebrow line above it clear of the header.
+ * A landing-page section and the target of its nav anchor.
+ *
+ * Two coupled values decide where an anchor lands, and they add together:
+ *   `html { scroll-padding-top: 4rem }` in globals.css, which matches the fixed header and is what
+ *   keeps focus clear of it, and the `scroll-margin-top` below. The section's top edge lands at
+ *   `4rem + scroll-margin-top`, so -4.25rem puts it at -0.25rem and -6.25rem (from `sm`) at -2.25rem.
+ * The margin is negative because the section's own top padding, 5rem and 7rem from `sm`, is already
+ * larger than the header, so the offset has to give part of that padding back. Change one of the two
+ * values and the other has to move by the same amount or the landing position shifts.
+ *
+ * The result: the eyebrow line clears the header and the heading sits 40px below it -- except in
+ * Services, where `SectionHeading`'s `lg:items-end` pushes the heading block 16px further down.
  */
 export function Section({ id, className, children }: { id: string; className?: string; children: ReactNode }) {
   return (
-    <section id={id} aria-labelledby={`${id}-title`} className={cn("-scroll-mt-1 py-20 sm:-scroll-mt-9 sm:py-28", className)}>
+    <section id={id} aria-labelledby={`${id}-title`} className={cn("-scroll-mt-17 py-20 sm:-scroll-mt-25 sm:py-28", className)}>
       {children}
     </section>
   );
