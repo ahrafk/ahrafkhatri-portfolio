@@ -121,6 +121,32 @@ test.describe("sections", () => {
   });
 });
 
+test.describe("header brand link and skip link", () => {
+  test.use({ viewport: { width: 1440, height: 900 } });
+
+  // WCAG 2.5.3 Label in Name: the accessible name has to contain the text people can see (axe: label-content-name-mismatch).
+  test("the brand link's accessible name contains its visible text", async ({ page }) => {
+    await page.goto("/");
+    const brand = page.getByRole("banner").getByRole("link").first();
+    await expect(brand).toHaveAccessibleName(/^AK\s+Ahraf Khatri\s+Web Intelligence Consultant\W+home$/);
+  });
+
+  test("the skip link focuses main without outlining the whole page, and Tab then enters the content", async ({ page }) => {
+    await page.goto("/");
+    await page.keyboard.press("Tab");
+    await expect(page.getByRole("link", { name: "Skip to content" })).toBeFocused();
+    await page.keyboard.press("Enter");
+
+    const main = page.locator("main#main");
+    await expect(main).toBeFocused();
+    await expect(main).toHaveCSS("outline-style", "none");
+
+    await page.keyboard.press("Tab");
+    expect(await page.evaluate(() => document.querySelector("main")!.contains(document.activeElement))).toBe(true);
+    expect(await page.evaluate(() => document.activeElement === document.querySelector("main"))).toBe(false);
+  });
+});
+
 test.describe("keyboard focus", () => {
   test.use({ viewport: { width: 1440, height: 900 } });
 

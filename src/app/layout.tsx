@@ -55,7 +55,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <ThemeProvider>
           <MotionProvider>
             <Nav />
-            <main id="main">{children}</main>
+            {/* tabIndex lets the skip link move focus here; outline-none keeps the global focus ring off the whole page. */}
+            <main id="main" tabIndex={-1} className="outline-none">
+              {children}
+            </main>
             <Footer />
           </MotionProvider>
         </ThemeProvider>
