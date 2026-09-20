@@ -2,6 +2,7 @@
 
 import { CircleAlert, CircleCheck, LoaderCircle, Send } from "lucide-react";
 import { useRef, useState, type FormEvent } from "react";
+import { flushSync } from "react-dom";
 import { budgetLabels, budgetValues, contactCopy, projectTypeLabels, projectTypeValues } from "@/content/contact";
 import { cn } from "@/lib/cn";
 
@@ -41,11 +42,6 @@ function loadValidation(): Promise<Validation> {
   return validation;
 }
 
-/** Runs after React has rendered aria-invalid, so the first invalid field in document order receives focus. */
-function focusFirstInvalid(form: HTMLFormElement) {
-  requestAnimationFrame(() => form.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus());
-}
-
 export function ContactForm() {
   const [status, setStatus] = useState<Status>("idle");
   const [errors, setErrors] = useState<FieldErrors>({});
@@ -59,6 +55,17 @@ export function ContactForm() {
     "aria-invalid": Boolean(errors[name]),
     "aria-describedby": errors[name] ? `contact-${name}-error` : undefined,
   });
+  /**
+   * Shows field errors and focuses the first invalid field in document order. This runs after an await, outside React's
+   * event batching, so the update is committed with flushSync first; otherwise aria-invalid may not be rendered yet.
+   */
+  function showErrors(form: HTMLFormElement, next: FieldErrors) {
+    flushSync(() => {
+      setErrors(next);
+      setStatus("idle");
+    });
+    form.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus();
+  }
   const fieldError = (name: FieldName) =>
     errors[name] ? (
       <p id={`contact-${name}-error`} className="mt-1.5 text-sm text-danger">
@@ -85,9 +92,7 @@ export function ContactForm() {
       });
 
       if (!parsed.success) {
-        setErrors(z.flattenError(parsed.error).fieldErrors as FieldErrors);
-        setStatus("idle");
-        focusFirstInvalid(form);
+        showErrors(form, z.flattenError(parsed.error).fieldErrors as FieldErrors);
         return;
       }
 
@@ -117,9 +122,7 @@ export function ContactForm() {
           setStatus("error");
           return;
         }
-        setErrors(fieldErrors);
-        setStatus("idle");
-        focusFirstInvalid(form);
+        showErrors(form, fieldErrors);
         return;
       }
       setStatus(res.status === 429 ? "rate-limited" : "error");
