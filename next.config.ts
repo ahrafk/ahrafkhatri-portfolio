@@ -3,7 +3,13 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
-  experimental: { optimizePackageImports: ["simple-icons", "lucide-react"], inlineCss: true },
+  experimental: {
+    optimizePackageImports: ["simple-icons", "lucide-react"],
+    // Puts the stylesheet in the HTML instead of a render-blocking <link>: a first-visit LCP win. Trade-offs: every
+    // page view re-downloads the CSS (home page measured at about 28 KB more gzipped HTML, 75 KB against 46 KB, and no
+    // separate CSS caching), and the flag is experimental (docs: the `inlineCss` page under next.config.js options).
+    inlineCss: true,
+  },
   async headers() {
     return [
       {

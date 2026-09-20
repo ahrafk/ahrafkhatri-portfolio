@@ -15,6 +15,8 @@ extraction-pipeline hero, a working contact form, and SEO, AEO and GEO built in.
 | `npm run lighthouse` | Lighthouse audit against a running production server on port 3100 |
 | `npm run typecheck` · `npm run lint` | Static checks |
 
+Three helper scripts in `scripts/` are not part of any suite. Each takes a URL (default `http://127.0.0.1:3100`, so start a production server first): `node scripts/shot.mjs [url] [width] [theme] [out] [full]` writes a screenshot (default `e2e/.output/shot.png`), `node scripts/pipeline-phases.mjs [url]` saves one PNG per hero pipeline phase, and `node scripts/console-check.mjs [base-url]` loads the home page, the three case studies and a missing page in light and dark, and fails on any console error or warning, page error or unexpected HTTP status.
+
 Both browser suites drive your **system Google Chrome**, not a downloaded
 browser: Playwright is configured with `channel: "chrome"`, and Lighthouse
 launches `/usr/bin/google-chrome` unless you set `CHROME_PATH`.
@@ -63,7 +65,7 @@ files checked in.
 
 ## Editing content
 
-All copy is in `src/content/`. Components hold none.
+All section copy lives in `src/content/`; button labels and UI chrome live beside their components.
 
 - `site.ts`: name, title, description, email, social links, location, `allowAiTrainingCrawlers`, `lastUpdated`.
 - `hero.ts`, `sections.ts`, `services.ts`, `about.ts`, `stats.ts`, `stack.ts`, `faq.ts`, `contact.ts`.
@@ -73,10 +75,10 @@ All copy is in `src/content/`. Components hold none.
 ## Launch checklist (only you can do these)
 
 1. **Replace the placeholder testimonials** in `src/content/testimonials.ts` with real, permissioned quotes. The current three come from the original design and are marked `placeholder: true`.
-2. **Confirm the numbers** in `src/content/stats.ts` (5+ years, 10+ scrapers, 100M+ pages, 99% uptime) and the copy in `src/content/case-studies.ts`. The case study detail text was drafted from the one-line summaries in the design; add real outcomes and metrics only if you can stand behind them.
+2. **Confirm the numbers** in `src/content/stats.ts` (5+ years, 10+ scrapers, 100M+ pages, 99% uptime) and the copy in `src/content/case-studies.ts` and `src/content/faq.ts`. The case study detail text was drafted from the one-line summaries in the design, and the FAQ answers make service claims (for example "I also monitor the scrapers") that only you can confirm; add real outcomes and metrics only if you can stand behind them.
 3. **Check the contact details** in `src/content/site.ts` (email, LinkedIn, GitHub).
 4. **Register a domain**, deploy, and set `NEXT_PUBLIC_SITE_URL` to it **before the build runs**. The metadata routes are prerendered, so a value set only at runtime is too late: canonical URLs, the sitemap, JSON-LD and `llms.txt` are baked in at build time.
-5. **Turn on email**: create a Resend account, verify your sending domain, then set `RESEND_API_KEY`, `CONTACT_TO_EMAIL` and `CONTACT_FROM_EMAIL`.
+5. **Turn on email**: create a Resend account, verify your sending domain, then set `RESEND_API_KEY`, `CONTACT_TO_EMAIL` and `CONTACT_FROM_EMAIL`. Then send yourself a test message through the form. Until you set a verified `CONTACT_FROM_EMAIL`, Resend's default `onboarding@resend.dev` sender only delivers to the address registered with your Resend account.
 6. **Verify the site** in Google Search Console and Bing Webmaster Tools, and submit `/sitemap.xml`.
 7. **Link back to the site** from your LinkedIn and GitHub profiles. The `sameAs` links in the structured data are more credible when the profiles link back.
 8. **Earn a few real mentions** (a talk, a guest post, a directory listing). Structured data helps engines understand you; mentions help them trust you.
@@ -99,11 +101,13 @@ simulated throttling, LCP is charged for everything the page downloads before
 its first paint. That is about 368 KB: 206 KB of JavaScript, of which roughly
 140 KB is the React and Next.js client runtime, plus 86 KB of fonts and a
 75 KB document. Accessibility, Best Practices and SEO hit
-their targets, layout shift is zero, and on an unthrottled connection the
-observed LCP is about 140 ms. One home-page run in six reported accessibility
+their targets, layout shift is zero, and on a local loopback connection
+with no throttling the observed LCP is about 140 ms. One home-page run in six reported accessibility
 96, from two intermittent axe findings: the hero sample's dimmed code lines
 are below 4.5:1 during one phase of its animation, and the header logo's
-`aria-label` does not repeat the "AK" monogram beside it.
+`aria-label` did not repeat the "AK" monogram beside it. The second has since
+been fixed (the logo link is now named by its visible text); the table above
+predates that fix.
 
 ## SEO, AEO and GEO: what is built in
 
