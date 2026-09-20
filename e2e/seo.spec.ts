@@ -127,9 +127,41 @@ test.describe("machine-readable endpoints", () => {
     expect(await full.text()).toContain("## Frequently asked questions");
   });
 
+  test("the home page links an SVG icon, a 32px PNG icon and a 180px apple icon, and each resolves", async ({ page, request }) => {
+    await page.goto("/");
+    const links = await page.evaluate(() =>
+      [...document.querySelectorAll<HTMLLinkElement>('link[rel="icon"], link[rel="apple-touch-icon"]')].map((l) => ({
+        rel: l.rel,
+        href: l.getAttribute("href")!,
+        type: l.getAttribute("type"),
+        sizes: l.getAttribute("sizes"),
+      })),
+    );
+    expect(links.map((l) => `${l.rel} ${l.type} ${l.sizes}`).sort()).toEqual([
+      "apple-touch-icon image/png 180x180",
+      "icon image/png 32x32",
+      "icon image/svg+xml any",
+    ]);
+    for (const link of links) {
+      const res = await request.get(link.href);
+      expect(res.status(), link.href).toBe(200);
+      expect(res.headers()["content-type"], link.href).toContain(link.type!);
+    }
+  });
+
   test("manifest, favicon and social images resolve", async ({ request }) => {
-    expect((await request.get("/manifest.webmanifest")).status()).toBe(200);
+    const manifestRes = await request.get("/manifest.webmanifest");
+    expect(manifestRes.status()).toBe(200);
+    const manifest = (await manifestRes.json()) as { icons: { src: string; sizes: string; type: string }[] };
+    expect(manifest.icons.map((i) => `${i.type} ${i.sizes}`)).toEqual(["image/svg+xml any", "image/png 32x32", "image/png 180x180"]);
+    for (const icon of manifest.icons) {
+      const res = await request.get(icon.src);
+      expect(res.status(), icon.src).toBe(200);
+      expect(res.headers()["content-type"], icon.src).toContain(icon.type);
+    }
     expect((await request.get("/icon.svg")).status()).toBe(200);
+    expect((await request.get("/icon")).headers()["content-type"]).toContain("image/png");
+    expect((await request.get("/apple-icon")).headers()["content-type"]).toContain("image/png");
     const og = await request.get("/opengraph-image");
     expect(og.headers()["content-type"]).toContain("image/png");
     expect((await request.get(`/case-studies/${caseStudies[0].slug}/opengraph-image`)).status()).toBe(200);
