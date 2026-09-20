@@ -22,8 +22,10 @@ export function Hero() {
             <p className="font-mono text-xs uppercase tracking-[0.18em] text-accent">{hero.eyebrow}</p>
           </Reveal>
           <HeroHeadline lines={hero.headline} />
+          {/* The intro is the largest paint above the fold. It is not wrapped in `Reveal` so it shows in the server HTML
+              instead of waiting for hydration, which keeps LCP off the JavaScript critical path. */}
+          <p className="mt-6 max-w-xl text-pretty text-lg text-muted">{hero.intro}</p>
           <Reveal delay={0.35}>
-            <p className="mt-6 max-w-xl text-pretty text-lg text-muted">{hero.intro}</p>
             <ul className="mt-8 grid gap-x-6 gap-y-3 sm:grid-cols-2">
               {hero.ticks.map((tick) => (
                 <li key={tick} className="flex items-center gap-2.5 text-sm">
