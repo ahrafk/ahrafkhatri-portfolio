@@ -3,7 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
-  experimental: { optimizePackageImports: ["simple-icons", "lucide-react"] },
+  experimental: { optimizePackageImports: ["simple-icons", "lucide-react"], inlineCss: true },
   async headers() {
     return [
       {
