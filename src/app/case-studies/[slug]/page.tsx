@@ -51,7 +51,7 @@ export default async function CaseStudyPage({ params }: Props) {
       <article className="pb-20 pt-28 sm:pt-36">
         <Container className="max-w-[860px]">
           <nav aria-label="Breadcrumb">
-            <ol className="flex flex-wrap items-center gap-1.5 text-sm text-muted">
+            <ol role="list" className="flex flex-wrap items-center gap-1.5 text-sm text-muted">
               <li className="flex items-center gap-1.5">
                 <Link href="/" className="hover:text-fg">Home</Link>
                 <ChevronRight className="size-3.5" aria-hidden />
@@ -83,7 +83,7 @@ export default async function CaseStudyPage({ params }: Props) {
           <Reveal className="mt-14">
             <section aria-labelledby="approach-title">
               <h2 id="approach-title" className={h2}>{copy.approach}</h2>
-              <ol className="mt-6 space-y-4">
+              <ol role="list" className="mt-6 space-y-4">
                 {cs.approach.map((step, i) => (
                   <li key={step.title} className="flex gap-4 rounded-2xl border border-line bg-surface p-5">
                     <span aria-hidden className="grid size-9 shrink-0 place-items-center rounded-lg bg-surface-2 font-mono text-sm font-semibold text-accent">
@@ -111,7 +111,7 @@ export default async function CaseStudyPage({ params }: Props) {
             <Reveal className="mt-14">
               <section aria-labelledby="stack-title">
                 <h2 id="stack-title" className={h2}>{copy.stack}</h2>
-                <ul className="mt-6 flex flex-wrap gap-2.5">
+                <ul role="list" className="mt-6 flex flex-wrap gap-2.5">
                   {cs.stack.map((tool) => (
                     <li key={tool} className="rounded-xl border border-line bg-surface px-4 py-2 font-mono text-sm">{tool}</li>
                   ))}
@@ -123,7 +123,7 @@ export default async function CaseStudyPage({ params }: Props) {
           <Reveal className="mt-14">
             <section aria-labelledby="outcomes-title">
               <h2 id="outcomes-title" className={h2}>{copy.outcomes}</h2>
-              <ul className="mt-6 space-y-3">
+              <ul role="list" className="mt-6 space-y-3">
                 {cs.outcomes.map((outcome) => (
                   <li key={outcome} className="flex items-start gap-3">
                     <CircleCheck className="mt-0.5 size-5 shrink-0 text-ok" aria-hidden />
@@ -144,7 +144,7 @@ export default async function CaseStudyPage({ params }: Props) {
 
           <nav aria-label={copy.more} className="mt-16">
             <h2 className="font-mono text-xs uppercase tracking-[0.18em] text-muted">{copy.more}</h2>
-            <ul className="mt-4 grid gap-3 sm:grid-cols-2">
+            <ul role="list" className="mt-4 grid gap-3 sm:grid-cols-2">
               {others.map((c) => (
                 <li key={c.slug}>
                   <Link

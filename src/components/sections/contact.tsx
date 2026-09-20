@@ -22,7 +22,7 @@ export function Contact() {
               {copy.title}
             </h2>
             <p className="mt-5 max-w-md text-pretty text-muted">{copy.intro}</p>
-            <ul className="mt-8 space-y-1">
+            <ul role="list" className="mt-8 space-y-1">
               <li className={row}>
                 <MapPin className="size-5 text-accent" aria-hidden />
                 {site.location.locality}, {site.location.country}

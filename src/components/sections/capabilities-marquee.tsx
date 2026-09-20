@@ -29,7 +29,7 @@ export function CapabilitiesMarquee() {
           className="marquee relative min-w-0 flex-1 overflow-hidden [mask-image:linear-gradient(90deg,transparent,#000_8%,#000_92%,transparent)]"
           data-paused={paused}
         >
-          <ul className="marquee-track flex">
+          <ul role="list" className="marquee-track flex">
             {capabilities.map((c) => (
               <li key={c} className="shrink-0 pr-3">
                 <Pill>{c}</Pill>

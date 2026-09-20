@@ -12,7 +12,7 @@ const view = { once: true, margin: "0px 0px -10% 0px" } as const;
  */
 export function ArchitectureDiagram({ stages }: { stages: string[] }) {
   return (
-    <ol aria-label="Pipeline stages" className="flex flex-col items-stretch md:flex-row">
+    <ol role="list" aria-label="Pipeline stages" className="flex flex-col items-stretch md:flex-row">
       {stages.map((stage, i) => (
         <li key={stage} className="flex flex-col items-center md:flex-1 md:flex-row">
           <m.div
@@ -23,7 +23,7 @@ export function ArchitectureDiagram({ stages }: { stages: string[] }) {
             transition={{ duration: 0.5, delay: i * 0.12, ease: EASE_OUT }}
             className="w-full rounded-xl border border-line bg-surface px-4 py-4 text-center text-sm font-medium md:min-h-[88px] md:flex-1 md:content-center md:self-stretch"
           >
-            <span className="mb-1 block font-mono text-[10px] text-accent">{String(i + 1).padStart(2, "0")}</span>
+            <span aria-hidden className="mb-1 block font-mono text-[10px] text-accent">{String(i + 1).padStart(2, "0")}</span>
             {stage}
           </m.div>
           {i < stages.length - 1 ? (

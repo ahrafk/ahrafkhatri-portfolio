@@ -34,7 +34,7 @@ export function About() {
           </Reveal>
 
           <Reveal delay={0.08}>
-            <ul className="space-y-1 rounded-2xl border border-line bg-surface p-5">
+            <ul role="list" className="space-y-1 rounded-2xl border border-line bg-surface p-5">
               <li className={rowClass}>
                 <MapPin className="size-5 text-accent" aria-hidden />
                 {site.location.locality}, {site.location.country}

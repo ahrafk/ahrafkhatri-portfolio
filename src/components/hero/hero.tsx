@@ -33,7 +33,7 @@ export function Hero() {
           <p className="hero-in mt-6 max-w-xl text-pretty text-lg text-muted" style={step(1)}>
             {hero.intro}
           </p>
-          <ul className="hero-in mt-8 grid gap-x-6 gap-y-3 sm:grid-cols-2" style={step(4)}>
+          <ul role="list" className="hero-in mt-8 grid gap-x-6 gap-y-3 sm:grid-cols-2" style={step(4)}>
             {hero.ticks.map((tick) => (
               <li key={tick} className="flex items-center gap-2.5 text-sm">
                 <CircleCheck className="size-[18px] shrink-0 text-accent" aria-hidden />
@@ -55,7 +55,7 @@ export function Hero() {
       </Container>
 
       <Container className="mt-14">
-        <ul className="hero-in flex flex-wrap gap-x-8 gap-y-3 border-t border-line pt-6 text-sm text-muted" style={step(6)}>
+        <ul role="list" className="hero-in flex flex-wrap gap-x-8 gap-y-3 border-t border-line pt-6 text-sm text-muted" style={step(6)}>
           {hero.facts.map((fact) => {
             const Icon = factIcons[fact.icon];
             return (

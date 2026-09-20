@@ -13,7 +13,7 @@ export function CaseStudies() {
     <Section id="case-studies">
       <Container>
         <SectionHeading id="case-studies" eyebrow={copy.eyebrow} title={copy.title} intro={copy.intro} />
-        <ul className="grid gap-4 lg:grid-cols-3">
+        <ul role="list" className="grid gap-4 lg:grid-cols-3">
           {caseStudies.map((cs, i) => (
             <li key={cs.slug}>
               <Reveal delay={i * 0.08} className="h-full">

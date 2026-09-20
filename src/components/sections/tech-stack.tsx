@@ -37,7 +37,7 @@ export function TechStack() {
               <div className="h-full rounded-2xl border border-line bg-surface p-6">
                 <h3 className="text-base font-semibold">{group.label}</h3>
                 <p className="mt-1 text-sm text-muted">{group.blurb}</p>
-                <ul className="mt-5 flex flex-wrap gap-2.5">
+                <ul role="list" className="mt-5 flex flex-wrap gap-2.5">
                   {group.items.map((item) => (
                     <TechChip key={item.name} item={item} />
                   ))}

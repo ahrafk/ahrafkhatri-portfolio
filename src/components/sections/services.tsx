@@ -14,7 +14,7 @@ export function Services() {
     <Section id="services">
       <Container>
         <SectionHeading id="services" eyebrow={copy.eyebrow} title={copy.title} intro={copy.intro} />
-        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <ul role="list" className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {services.map((service, i) => {
             const Icon = icons[service.icon];
             return (

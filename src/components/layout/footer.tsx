@@ -6,7 +6,7 @@ import { caseStudies } from "@/content/case-studies";
 import { navLinks } from "@/content/sections";
 import { site } from "@/content/site";
 
-const linkClass = "inline-flex min-h-8 items-center text-sm text-muted transition-colors hover:text-fg";
+const linkClass = "inline-flex min-h-11 items-center text-sm text-muted transition-colors hover:text-fg";
 
 export function Footer() {
   return (
@@ -31,7 +31,7 @@ export function Footer() {
 
         <nav aria-label="Footer">
           <h2 className="font-mono text-xs uppercase tracking-[0.18em] text-fg">Quick links</h2>
-          <ul className="mt-4 space-y-1">
+          <ul role="list" className="mt-4">
             <li>
               <Link href="/" className={linkClass}>Home</Link>
             </li>
@@ -45,7 +45,7 @@ export function Footer() {
 
         <nav aria-label="Case studies">
           <h2 className="font-mono text-xs uppercase tracking-[0.18em] text-fg">Case studies</h2>
-          <ul className="mt-4 space-y-1">
+          <ul role="list" className="mt-4">
             {caseStudies.map((c) => (
               <li key={c.slug}>
                 <Link href={`/case-studies/${c.slug}`} className={linkClass}>{c.title}</Link>
@@ -56,7 +56,7 @@ export function Footer() {
 
         <div>
           <h2 className="font-mono text-xs uppercase tracking-[0.18em] text-fg">Connect</h2>
-          <ul className="mt-4 space-y-1">
+          <ul role="list" className="mt-4">
             <li>
               <a href={site.social.linkedin} target="_blank" rel="noopener noreferrer me" className={`${linkClass} gap-2`}>
                 <LinkedInMark /> LinkedIn
