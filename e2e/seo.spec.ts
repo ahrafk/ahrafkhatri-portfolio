@@ -21,12 +21,16 @@ test.describe("server-rendered HTML with JavaScript disabled", () => {
 
   test("animated content is forced visible without JS", async ({ page }) => {
     await page.goto("/");
-    const hidden = await page.evaluate(() =>
-      [...document.querySelectorAll("[data-reveal]")].filter((el) => {
+    const { count, hidden } = await page.evaluate(() => {
+      const revealed = [...document.querySelectorAll("[data-reveal]")];
+      const stillHidden = revealed.filter((el) => {
         const s = getComputedStyle(el);
         return s.opacity !== "1" || s.transform !== "none";
-      }).length,
-    );
+      });
+      return { count: revealed.length, hidden: stillHidden.length };
+    });
+    // Without this the check passes vacuously when nothing carries the attribute any more.
+    expect(count).toBeGreaterThan(0);
     expect(hidden).toBe(0);
   });
 

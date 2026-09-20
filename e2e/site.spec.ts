@@ -17,11 +17,18 @@ test.describe("hero pipeline", () => {
   test("pause freezes it and play resumes", async ({ page }) => {
     await page.goto("/");
     const el = page.locator("[data-phase]");
-    await page.getByRole("button", { name: "Pause animation" }).click();
+    // The accessible name stays "Pause animation" in both states; `aria-pressed` carries the state.
+    const toggle = page.getByRole("button", { name: "Pause animation" });
+    await toggle.click();
+    await expect(toggle).toHaveAttribute("aria-pressed", "true");
     const frozen = await el.getAttribute("data-phase");
-    await page.waitForTimeout(2800);
+    await page.waitForTimeout(2800); // longer than any phase (the longest is 2.7 s), so a running loop would have moved on
     expect(await el.getAttribute("data-phase")).toBe(frozen);
-    await expect(page.getByRole("button", { name: "Pause animation" })).toHaveAttribute("aria-pressed", "true");
+
+    await toggle.click();
+    await expect(toggle).toHaveAttribute("aria-pressed", "false");
+    // Resuming arms a fresh timer for the current phase, so allow the longest phase plus slack instead of sleeping.
+    await expect.poll(() => el.getAttribute("data-phase"), { timeout: 4000 }).not.toBe(frozen);
   });
 
   test("reduced motion shows the finished frame and hides the pause control", async ({ browser }) => {
