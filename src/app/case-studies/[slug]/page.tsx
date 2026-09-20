@@ -73,12 +73,12 @@ export default async function CaseStudyPage({ params }: Props) {
             </p>
           </header>
 
-          <Reveal className="mt-14">
-            <section aria-labelledby="problem-title">
-              <h2 id="problem-title" className={h2}>{copy.problem}</h2>
-              <p className="mt-4 text-pretty text-muted">{cs.problem}</p>
-            </section>
-          </Reveal>
+          {/* The problem statement is the largest paint in the first viewport on mobile. It is not wrapped in `Reveal`,
+              so it shows in the server HTML instead of waiting for hydration, which keeps LCP off the JavaScript path. */}
+          <section aria-labelledby="problem-title" className="mt-14">
+            <h2 id="problem-title" className={h2}>{copy.problem}</h2>
+            <p className="mt-4 text-pretty text-muted">{cs.problem}</p>
+          </section>
 
           <Reveal className="mt-14">
             <section aria-labelledby="approach-title">
