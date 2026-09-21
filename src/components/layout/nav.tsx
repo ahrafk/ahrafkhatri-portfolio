@@ -50,15 +50,10 @@ export function Nav() {
     >
       <div className="mx-auto flex h-16 w-full max-w-[1200px] items-center justify-between gap-4 px-4 sm:px-6">
         {/* No aria-label: the accessible name is the visible text (WCAG 2.5.3, Label in Name), plus a spoken-only "home". */}
-        <Link href="/" className="flex items-center gap-3">
-          <span className="grid size-9 place-items-center rounded-lg bg-accent font-mono text-sm font-bold text-accent-fg">
-            AK
-          </span>
-          <span className="leading-tight">
-            <span className="block text-sm font-semibold">{site.brand}</span>
-            <span className="hidden text-[11px] text-muted sm:block lg:hidden xl:block">Web Intelligence Consultant</span>
-            <span className="sr-only">, home</span>
-          </span>
+        <Link href="/" className="block py-1.5 leading-tight">
+          <span className="block text-base font-semibold tracking-[-0.01em]">{site.brand}</span>
+          <span className="hidden text-[11px] text-muted sm:block lg:hidden xl:block">Web Intelligence Consultant</span>
+          <span className="sr-only">, home</span>
         </Link>
 
         <nav aria-label="Primary" className="hidden items-center gap-1 lg:flex">

@@ -74,7 +74,7 @@ All section copy lives in `src/content/`; button labels and UI chrome live besid
 
 ## Launch checklist (only you can do these)
 
-1. **Replace the placeholder testimonials** in `src/content/testimonials.ts` with real, permissioned quotes. The current three come from the original design and are marked `placeholder: true`.
+1. **Add real testimonials when you have them.** The three quotes from the original design are unverified, so the Testimonials section is hidden: entries in `src/content/testimonials.ts` marked `placeholder: true` are never published. To show the section, replace them with real, permissioned quotes and set `placeholder: false` (or remove the flag); the section reappears automatically.
 2. **Confirm the numbers** in `src/content/stats.ts` (5+ years, 10+ scrapers, 100M+ pages, 99% uptime) and the copy in `src/content/case-studies.ts` and `src/content/faq.ts`. The case study detail text was drafted from the one-line summaries in the design, and the FAQ answers make service claims (for example "I also monitor the scrapers") that only you can confirm; add real outcomes and metrics only if you can stand behind them.
 3. **Check the contact details** in `src/content/site.ts` (email, LinkedIn, GitHub).
 4. **Register a domain**, deploy, and set `NEXT_PUBLIC_SITE_URL` to it **before the build runs**. The metadata routes are prerendered, so a value set only at runtime is too late: canonical URLs, the sitemap, JSON-LD and `llms.txt` are baked in at build time.
@@ -105,7 +105,7 @@ their targets, layout shift is zero, and on a local loopback connection
 with no throttling the observed LCP is about 140 ms. One home-page run in six reported accessibility
 96, from two intermittent axe findings: the hero sample's dimmed code lines
 are below 4.5:1 during one phase of its animation, and the header logo's
-`aria-label` did not repeat the "AK" monogram beside it. The second has since
+`aria-label` did not repeat the visible text beside it. The second has since
 been fixed (the logo link is now named by its visible text); the table above
 predates that fix.
 

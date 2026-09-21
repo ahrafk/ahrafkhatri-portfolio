@@ -3,8 +3,11 @@ export type Testimonial = {
   role: string;
   company: string;
   monogram: string;
-  /** PLACEHOLDER quotes carried over from the original design. Replace with real, permissioned quotes before launch. */
-  placeholder: true;
+  /**
+   * `true` marks text that has NOT been verified with a real client. Placeholder entries are never published:
+   * the Testimonials section stays hidden until at least one entry has `placeholder` set to false (or omitted).
+   */
+  placeholder?: boolean;
 };
 
 export const testimonials: Testimonial[] = [
@@ -30,3 +33,6 @@ export const testimonials: Testimonial[] = [
     placeholder: true,
   },
 ];
+
+/** Only verified, permissioned testimonials are shown on the site. */
+export const publishedTestimonials: Testimonial[] = testimonials.filter((t) => !t.placeholder);

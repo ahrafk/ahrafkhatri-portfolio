@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { testimonials } from "@/content/testimonials";
 
 test.describe("hero pipeline", () => {
   test("cycles through all five phases", async ({ page }) => {
@@ -113,9 +114,11 @@ test.describe("sections", () => {
     await expect(page.getByRole("button", { name: "Pause capabilities scroll" })).toHaveAttribute("aria-pressed", "true");
   });
 
-  test("testimonials use monograms, never images", async ({ page }) => {
+  test("unverified placeholder testimonials are never published, and no images appear", async ({ page }) => {
     await page.goto("/");
-    await expect(page.locator("#testimonials img")).toHaveCount(0);
+    for (const t of testimonials.filter((x) => x.placeholder)) {
+      await expect(page.getByText(t.quote)).toHaveCount(0);
+    }
     await expect(page.locator("main img")).toHaveCount(0);
   });
 
@@ -135,7 +138,7 @@ test.describe("header brand link and skip link", () => {
   test("the brand link's accessible name contains its visible text", async ({ page }) => {
     await page.goto("/");
     const brand = page.getByRole("banner").getByRole("link").first();
-    await expect(brand).toHaveAccessibleName(/^AK\s+Ahraf Khatri\s+Web Intelligence Consultant\W+home$/);
+    await expect(brand).toHaveAccessibleName(/^Ahraf Khatri\s+Web Intelligence Consultant\W+home$/);
   });
 
   test("the skip link focuses main without outlining the whole page, and Tab then enters the content", async ({ page }) => {

@@ -9,7 +9,7 @@ import { services } from "./services";
 import { absoluteUrl, site } from "./site";
 import { stackGroups } from "./stack";
 import { stats } from "./stats";
-import { testimonials } from "./testimonials";
+import { publishedTestimonials, testimonials } from "./testimonials";
 
 const words = (s: string) => s.trim().split(/\s+/).length;
 
@@ -108,6 +108,18 @@ describe("testimonials", () => {
       expect(Object.keys(t)).not.toContain("avatar");
       expect(Object.keys(t)).not.toContain("image");
     }
+  });
+});
+
+describe("published testimonials", () => {
+  it("never publishes entries flagged as placeholders", () => {
+    expect(publishedTestimonials.every((t) => !t.placeholder)).toBe(true);
+    expect(publishedTestimonials.length).toBe(testimonials.filter((t) => !t.placeholder).length);
+  });
+  it("publishes nothing while every entry is still a placeholder", () => {
+    // The three quotes from the original design are unverified, so the section stays hidden until real ones replace them.
+    expect(testimonials.every((t) => t.placeholder)).toBe(true);
+    expect(publishedTestimonials).toHaveLength(0);
   });
 });
 
