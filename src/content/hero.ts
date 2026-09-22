@@ -7,7 +7,7 @@ export type Hero = {
   ticks: string[];
   primaryCta: { label: string; href: string };
   secondaryCta: { label: string; href: string };
-  facts: { icon: "pin" | "clock" | "globe" | "layers" | "badge"; label: string }[];
+  facts: { icon: "pin" | "clock" | "globe" | "layers" | "badge" | "briefcase"; label: string }[];
 };
 
 export const hero: Hero = {
@@ -30,6 +30,7 @@ export const hero: Hero = {
   facts: [
     { icon: "pin", label: "Mumbai, India" },
     { icon: "clock", label: "5+ Years Experience" },
+    { icon: "briefcase", label: "35+ Projects Completed" },
     { icon: "globe", label: "Global Clients" },
     { icon: "layers", label: "Scalable Solutions" },
     { icon: "badge", label: "Reliable & Ethical" },

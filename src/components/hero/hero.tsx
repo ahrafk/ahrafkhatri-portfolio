@@ -1,4 +1,4 @@
-import { BadgeCheck, CircleCheck, Clock, Globe, Layers, MapPin } from "lucide-react";
+import { BadgeCheck, Briefcase, CircleCheck, Clock, Globe, Layers, MapPin } from "lucide-react";
 import type { CSSProperties } from "react";
 import { ExtractionPipeline } from "@/components/pipeline/extraction-pipeline";
 import { Button } from "@/components/ui/button";
@@ -6,7 +6,7 @@ import { Container } from "@/components/ui/container";
 import { hero } from "@/content/hero";
 import { HeroHeadline } from "./hero-headline";
 
-const factIcons = { pin: MapPin, clock: Clock, globe: Globe, layers: Layers, badge: BadgeCheck } as const;
+const factIcons = { pin: MapPin, clock: Clock, globe: Globe, layers: Layers, badge: BadgeCheck, briefcase: Briefcase } as const;
 
 /**
  * Stagger step for the `.hero-in` entrance (see globals.css); the delay is `--i` x 70ms.
